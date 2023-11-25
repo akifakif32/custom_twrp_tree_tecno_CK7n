@@ -42,7 +42,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     bootctrl \
     bootctrl.recovery \
-    libmtk_bsg
 
 PRODUCT_PACKAGES_DEBUG += \
     bootctrl
