@@ -44,6 +44,9 @@ PRODUCT_PACKAGES += \
     bootctrl \
     bootctrl.recovery \
     libmtk_bsg
+PRODUCT_PACKAGES += \
+    bootctrl.mt6789 \
+    bootctrl.mt6789.recovery
 
 PRODUCT_PACKAGES_DEBUG += \
     bootctrl
