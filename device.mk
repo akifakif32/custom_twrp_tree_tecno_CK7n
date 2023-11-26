@@ -7,15 +7,6 @@
 
 LOCAL_PATH := device/tecno/CK7n
 
-# Dynamic Partitions
-PRODUCT_USE_DYNAMIC_PARTITIONS := true
-
-# VNDK
-PRODUCT_TARGET_VNDK_VERSION := 32
-
-# API
-PRODUCT_SHIPPING_API_LEVEL := 32
-
 # A/B
 AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_system=true \
@@ -23,9 +14,19 @@ AB_OTA_POSTINSTALL_CONFIG += \
     FILESYSTEM_TYPE_system=ext4 \
     POSTINSTALL_OPTIONAL_system=true
 
-# Enable Virtual A/B OTA
-ENABLE_VIRTUAL_AB := true
-$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/launch_with_vendor_ramdisk.mk)
+# Boot control HAL
+PRODUCT_PACKAGES += \
+    android.hardware.boot@1.2-service \
+    android.hardware.boot@1.2-mtkimpl \
+    android.hardware.boot@1.2-mtkimpl.recovery
+
+PRODUCT_PACKAGES_DEBUG += \
+    bootctrl \
+    update_engine_client
+
+PRODUCT_PACKAGES += \
+    bootctrl.mt6789 \
+    bootctrl.mt6789.recovery
 
 PRODUCT_PACKAGES += \
     otapreopt_script \
@@ -34,26 +35,25 @@ PRODUCT_PACKAGES += \
     update_verifier \
     update_engine_sideload
 
-# Boot control HAL
+# fastbootd
 PRODUCT_PACKAGES += \
-    android.hardware.boot@1.2-mtkimpl \
-    android.hardware.boot@1.2-mtkimpl.recovery
-
-PRODUCT_PACKAGES += \
-    bootctrl \
-    bootctrl.recovery \
-
-PRODUCT_PACKAGES_DEBUG += \
-    bootctrl
-
+    android.hardware.fastboot@1.0-impl-mock \
+    fastbootd
+    
 # Health HAL
 PRODUCT_PACKAGES += \
     android.hardware.health@2.1-impl \
     android.hardware.health@2.1-service
+    
+# Dynamic Partitions
+PRODUCT_USE_DYNAMIC_PARTITIONS := true
 
-# Fastbootd
-PRODUCT_PACKAGES += \
-    android.hardware.fastboot@1.0-impl-mock \
-    fastbootd
-PRODUCT_COPY_FILES += $(LOCAL_PATH)/prebuilt/fstab.emmc:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/fstab.emmc
-PRODUCT_COPY_FILES += $(LOCAL_PATH)/prebuilt/fstab.mt6789:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/fstab.mt6789
+# VNDK
+PRODUCT_TARGET_VNDK_VERSION := 31
+
+# API
+PRODUCT_SHIPPING_API_LEVEL := 31
+
+# Virtual A/B
+ENABLE_VIRTUAL_AB := true
+$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/launch.mk)
